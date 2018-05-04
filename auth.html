@@ -1,0 +1,48 @@
+<html>
+    
+    <body>
+        <div align="center">
+
+            <input id="usr" type="text" name="usr" placeholder="User@Host" value="mneu@basis"><br>
+            <input id="pwd" type="password" name="pwd" placeholder="Password" value="11880dwsgh"><br>
+            <button onclick="submit()" on-tap="submit()" type="button">Submit</button>
+        </div>
+    </body>
+    <script>
+        function submit() {
+
+            var usr = document.getElementById("usr").value;
+            var pwd = document.getElementById("pwd").value;
+
+            var token = usr + ":" + pwd;
+
+            if(usr.match(/[a-zA-Z0-9]*@[a-zA-Z0-9]*/)){
+                var urlParams = new URLSearchParams(window.location.search);
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {    
+                        document.location.href = urlParams.get('redirect_uri')
+                        + '#state=' + urlParams.get('state')
+                        + '&access_token=' + usr
+                        + '&token_type=Bearer'
+                    }
+                }.bind(this);
+                var sourceToCall = urlParams.get('auth_uri');
+                console.log(sourceToCall)
+                let apiKey = urlParams.get('apiKey');
+                console.log(apiKey)
+                xhr.open('POST', sourceToCall, true);
+
+                xhr.setRequestHeader("user", usr);
+                xhr.setRequestHeader("pwd", pwd);
+                xhr.setRequestHeader("x-api-key", apiKey);
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.send();
+            }else{
+                alert("username must be user@host");
+            }
+
+		}
+    </script>
+    
+    </html>
